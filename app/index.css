@@ -10,6 +10,11 @@ li{
   list-style-type: None;
 }
 
+a {
+  text-decoration: none;
+  color: #d0021b;
+}
+
 .container{
   max-width: 1200px;
   margin: 0 auto;
@@ -32,20 +37,61 @@ li{
   justify-content: space-around;
 }
 
-.popular-item{
+.popular-item {
   margin: 20px;
   text-align: center;
 }
 
-.popular-rank{
+.popular-rank {
   font-size: 20px;
   margin: 10px;
 }
-.space-list-items{
+.space-list-items {
  margin-bottom: 7px;
+}
+
+.nav {
+  display: flex;
 }
 
 .avatar{
   width: 150px;
   border-radius: 50%;
+}
+
+.active {
+  font-weight: bold;
+}
+
+.nav li {
+  margin-right: 15px;
+}
+
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.button {
+  color: #e6e6e6;
+  background: #0a0a0a;
+  border: none;
+  font-size: 16px;
+  border-radius: 3px;
+  width: 200px;
+  text-align: center;
+  display: block;
+  padding: 7px 0;
+  margin: 10px auto;
+}
+
+.button:hover:enabled {
+  background: linear-gradient(#1a1a1a,#0a0a0a);
+  color: #fff;
+  text-decoration: none;
+}
+
+.button:active {
+  transform: translateY(1px);
 }
