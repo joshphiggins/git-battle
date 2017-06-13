@@ -1,13 +1,12 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import queryString from 'query-string';
+import { parse } from 'query-string';
 import { Link } from 'react-router-dom';
-import api from '../utils/api';
+import { battle } from '../utils/api';
 import PlayerPreview from './PlayerPreview';
 import Loading from './Loading';
 
-function Profile (props) {
-  const info = props.info;
+function Profile ({ info }) {
 
   return (
     <PlayerPreview avatar={info.avatar_url} username={info.login}>
@@ -24,13 +23,16 @@ function Profile (props) {
   );
 }
 
+Profile.propTypes = {
+  info: PropTypes.object.isRequired,
+};
 
-function Player (props) {
+function Player ( {label, score, profile}) {
   return (
     <div>
-      <h1 className='header'>{props.label}</h1>
-      <h3 style={{textAlign: 'center'}}>Score: {props.score}</h3>
-      <Profile info={props.profile}/>
+      <h1 className='header'>{label}</h1>
+      <h3 style={{textAlign: 'center'}}>Score: {score}</h3>
+      <Profile info={profile}/>
     </div>
   );
 }
@@ -41,52 +43,37 @@ Player.propTypes = {
   profile: PropTypes.object.isRequired
 };
 
-class Results extends React.Component {
-  constructor (props) {
-    super(props);
-
-    this.state = {
-      winner: null,
-      loser: null,
-      error: null,
-      loading: true
-    };
+class Results extends Component {
+  state = {
+    winner: null,
+    loser: null,
+    error: null,
+    loading: true,
   }
-  componentDidMount () {
-    const players = queryString.parse(this.props.location.search);
-    api.battle([
-      players.playerOneName,
-      players.playerTwoName
-    ]).then(function (results) {
-      if (results === null) {
-        return this.setState(function () {
-          return {
-            error: 'Looks like there was an error. Make sure both users exits',
-            loading : false
-          };
-        });
-      }
+  async componentDidMount() {
+    const {playerOneName, playerTwoName} = parse(this.props.location.search);
+    const players = await battle([
+      playerOneName,
+      playerTwoName
+    ]);
 
-      this.setState(function () {
-        return {
+    return players === null
+      ? this.setState(() => ({
+        error: 'Looks like there was an error. Make sure both users exits',
+        loading : false
+      }))
+      : this.setState(() => ({
           error: null,
-          winner: results[0],
-          loser: results[1],
+          winner: players[0],
+          loser: players[1],
           loading: false
-        };
-      });
-    }.bind(this));
+        }));
   }
-  render (){
-    const error = this.state.error;
-    const winner = this.state.winner;
-    const loser = this.state.loser;
-    const loading = this.state.loading;
-
+  render () {
+    const { error, winner, loser, loading } = this.state;
     if (loading === true) {
       return <Loading />;
     }
-
     if (error) {
       return (
         <div>
@@ -95,7 +82,6 @@ class Results extends React.Component {
         </div>
       );
     }
-
     return (
       <div className='row'>
         <Player
