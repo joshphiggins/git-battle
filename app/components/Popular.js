@@ -1,9 +1,10 @@
-var React = require('react');
-var PropTypes = require('prop-types');
-var api = require('../utils/api');
+import React from 'react';
+import PropTypes from 'prop-types';
+import api from '../utils/api' ;
+import Loading from './Loading';
 
 function SelectLanguage (props) {
-    var languages = ['All', 'JavaScript', 'Python', 'Ruby', 'Java', 'CSS'];
+    const languages = ['All', 'JavaScript', 'Python', 'Ruby', 'Java', 'CSS'];
 
     return (
       <ul className='languages'>
@@ -94,11 +95,11 @@ class Popular extends React.Component {
           onSelect={this.updateLanguage}
         />
         {!this.state.repos
-          ? <p> LOADING </p> :
+          ? <Loading text="Loading" speed={500} /> :
         <RepoGrid repos={this.state.repos} /> }
       </div>
     );
   }
 }
 
-module.exports = Popular;
+export default Popular;
